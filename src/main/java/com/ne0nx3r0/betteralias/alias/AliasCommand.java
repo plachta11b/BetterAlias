@@ -6,7 +6,7 @@ public class AliasCommand
     final AliasCommandTypes type;
     int waitTime;
     
-    public AliasCommand(String command,AliasCommandTypes type,int waitTime)
+    public AliasCommand(String command, AliasCommandTypes type, int waitTime)
     {
         this.command = command;
         this.type = type;

@@ -1,10 +1,11 @@
 package com.ne0nx3r0.betteralias.command;
 
-import com.ne0nx3r0.betteralias.BetterAlias;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import com.ne0nx3r0.betteralias.BetterAlias;
 
 public class BetterAliasCommandExecutor implements CommandExecutor {
     private final BetterAlias plugin;

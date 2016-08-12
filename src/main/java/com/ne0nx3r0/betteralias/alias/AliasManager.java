@@ -1,21 +1,27 @@
 package com.ne0nx3r0.betteralias.alias;
 
-import com.ne0nx3r0.betteralias.BetterAlias;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.ne0nx3r0.betteralias.BetterAlias;
 
 
 // Helper methods
@@ -53,17 +59,21 @@ public class AliasManager {
             Alias alias = new Alias(
                     sAlias,
                     yml.getBoolean(sAlias + ".caseSensitive", false),
-                    yml.getString(sAlias + ".permission", null));
+                    yml.getString(sAlias + ".permission", null),
+                    yml.getString(sAlias + ".priority", null));
 
             for (String sArg : yml.getConfigurationSection(sAlias).getKeys(false)) {
                 List<AliasCommand> commandsList = new ArrayList<AliasCommand>();
 
-                if (!sArg.equalsIgnoreCase("permission") && !sArg.equalsIgnoreCase("caseSensitive")) {
+                if (!sArg.equalsIgnoreCase("permission")
+                		&& !sArg.equalsIgnoreCase("caseSensitive")
+                		&& !sArg.equalsIgnoreCase("priority")) {
                     int iArg;
 
                     if (sArg.equals("*")) {
                         iArg = -1;
                     } else {
+                    	// TODO This raise error sometime on unknown configuration parameter
                         iArg = Integer.parseInt(sArg);
                     }
 
@@ -333,18 +343,21 @@ public class AliasManager {
         return false;
     }
 
-    public Collection<Alias> getAliasMatches(String sCommand) {
+    public Collection<Alias> getAliasMatches(String sCommand, EventPriority priority) {
         String sCommandLower = sCommand.toLowerCase()+" ";
 
         ArrayList<Alias> aliasMatches = new ArrayList<Alias>();
 
         for (Alias alias : this.aliases.values()) {
+        	if (priority != alias.getPriority()) {
+        		continue;
+        	}
+
             if (alias.caseSensitive) {
                 if (sCommand.startsWith(alias.command+" ")) {
                     aliasMatches.add(alias);
                 }
-            } 
-            else if (sCommandLower.startsWith(alias.command+" ")) {
+            } else if (sCommandLower.startsWith(alias.command+" ")) {
                 aliasMatches.add(alias);
             }
         }
