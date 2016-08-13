@@ -88,7 +88,7 @@ public class Alias
         return this.parameters.get(-1);
     }
 
-    void setCommandsFor(int length,List<AliasCommand> commandsList)
+    public void setCommandsFor(int length,List<AliasCommand> commandsList)
     {
         this.parameters.put(length, commandsList);
     }

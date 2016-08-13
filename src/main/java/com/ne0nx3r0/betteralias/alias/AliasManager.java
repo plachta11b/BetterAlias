@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,137 +15,38 @@ import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 
 import com.ne0nx3r0.betteralias.BetterAlias;
+import com.ne0nx3r0.betteralias.config.AliasConfig;
 
 
 // Helper methods
 public class AliasManager {
     private static BetterAlias plugin;
     private HashMap<String, Alias> aliases;
-
+    private AliasConfig config;
+    
     public AliasManager(BetterAlias plugin) {
         AliasManager.plugin = plugin;
 
-        this.loadAliases();
+        this.config = new AliasConfig(plugin);
+
+        // TODO resolve error when no aliases loaded
+        loadAliases();
     }
 
-    public final boolean loadAliases() {
-        this.aliases = new HashMap<String, Alias>();
+	public boolean loadAliases() {
 
-        File configFile = new File(plugin.getDataFolder(), "aliases.yml");
+        this.aliases = this.config.loadAliases();
 
-        if (!configFile.exists()) {
-            configFile.getParentFile().mkdirs();
-            copy(plugin.getResource("aliases.yml"), configFile);
+        if (aliases.isEmpty()) {
+        	return false;
         }
 
-        FileConfiguration yml = YamlConfiguration.loadConfiguration(configFile);
-
-        Set<String> aliasList = yml.getKeys(false);
-
-        if (aliasList.isEmpty()) {
-            plugin.getLogger().log(Level.WARNING, "No aliases found in aliases.yml");
-
-            return false;
-        }
-
-        for (String sAlias : aliasList) {
-            Alias alias = new Alias(
-                    sAlias,
-                    yml.getBoolean(sAlias + ".caseSensitive", false),
-                    yml.getString(sAlias + ".permission", null),
-                    yml.getString(sAlias + ".priority", null));
-
-            for (String sArg : yml.getConfigurationSection(sAlias).getKeys(false)) {
-                List<AliasCommand> commandsList = new ArrayList<AliasCommand>();
-
-                if (!sArg.equalsIgnoreCase("permission")
-                		&& !sArg.equalsIgnoreCase("caseSensitive")
-                		&& !sArg.equalsIgnoreCase("priority")) {
-                    int iArg;
-
-                    if (sArg.equals("*")) {
-                        iArg = -1;
-                    } else {
-                    	// TODO This raise error sometime on unknown configuration parameter
-                        iArg = Integer.parseInt(sArg);
-                    }
-
-                    List<String> sArgLines = new ArrayList<String>();
-
-                    if (yml.isList(sAlias + "." + sArg)) {
-                        sArgLines = yml.getStringList(sAlias + "." + sArg);
-                    } else {
-                        sArgLines.add(yml.getString(sAlias + "." + sArg));
-                    }
-
-                    for (String sArgLine : sArgLines) {
-                        AliasCommandTypes type = AliasCommandTypes.PLAYER;
-
-                        int waitTime = 0;
-
-                        if (sArgLine.contains(" ")) {
-                            String sType = sArgLine.substring(0, sArgLine.indexOf(" "));
-
-                            if (sType.equalsIgnoreCase("console")) {
-                                type = AliasCommandTypes.CONSOLE;
-
-                                sArgLine = sArgLine.substring(sArgLine.indexOf(" ") + 1);
-                            } else if (sType.equalsIgnoreCase("player_as_op")) {
-                                type = AliasCommandTypes.PLAYER_AS_OP;
-
-                                sArgLine = sArgLine.substring(sArgLine.indexOf(" ") + 1);
-                            } else if (sType.equalsIgnoreCase("reply")) {
-                                type = AliasCommandTypes.REPLY_MESSAGE;
-
-                                sArgLine = sArgLine.substring(sArgLine.indexOf(" ") + 1);
-                            } else if (sType.equalsIgnoreCase("wait")) {
-                                String[] sArgLineParams = sArgLine.split(" ");
-
-                                try {
-                                    waitTime = Integer.parseInt(sArgLineParams[1]);
-                                } catch (Exception e) {
-                                    plugin.getLogger().log(Level.WARNING, "Invalid wait time for command {0} in alias {1}, skipping line",
-                                            new Object[]{sArgLine, sAlias});
-
-                                    continue;
-                                }
-
-                                if (sArgLineParams[2].equalsIgnoreCase("reply")) {
-                                    type = AliasCommandTypes.WAIT_THEN_REPLY;
-
-                                    sArgLine = sArgLine.replace(sArgLineParams[0] + " " + sArgLineParams[1] + " " + sArgLineParams[2] + " ", "");
-                                } else if (sArgLineParams[2].equalsIgnoreCase("console")) {
-                                    type = AliasCommandTypes.WAIT_THEN_CONSOLE;
-
-                                    sArgLine = sArgLine.replace(sArgLineParams[0] + " " + sArgLineParams[1] + " " + sArgLineParams[2] + " ", "");
-                                } else {
-                                    type = AliasCommandTypes.WAIT;
-
-                                    sArgLine = sArgLine.replace(sArgLineParams[0] + " " + sArgLineParams[1] + " ", "");
-                                }
-                            }
-                        }
-
-                        sArgLine = this.replaceColorCodes(sArgLine);
-
-                        commandsList.add(new AliasCommand(sArgLine, type, waitTime));
-                    }
-
-                    alias.setCommandsFor(iArg, commandsList);
-                }
-            }
-
-            this.aliases.put(sAlias, alias);
-        }
-
-        return true;
-    }
+		return true;
+	}
 
     public boolean sendAliasCommands(Alias alias, CommandSender cs, String commandString) {
         Player player = null;
@@ -411,13 +311,5 @@ public class AliasManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private String replaceColorCodes(String str) {
-        for (ChatColor cc : ChatColor.values()) {
-            str = str.replace("&" + cc.name(), cc.toString());
-        }
-
-        return str;
     }
 }
