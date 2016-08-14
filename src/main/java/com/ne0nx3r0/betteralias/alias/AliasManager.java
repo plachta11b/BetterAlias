@@ -1,9 +1,5 @@
 package com.ne0nx3r0.betteralias.alias;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,10 +30,12 @@ public class AliasManager {
         this.config = new AliasConfig(plugin);
 
         // TODO resolve error when no aliases loaded
-        loadAliases();
+        this.aliases = this.config.loadAliases();
     }
 
 	public boolean loadAliases() {
+
+		this.config.reload();
 
         this.aliases = this.config.loadAliases();
 
@@ -97,7 +95,7 @@ public class AliasManager {
                         }
                     } else if (text.equalsIgnoreCase("handItemName")) {
                         if (player != null) {
-                            text = player.getItemInHand().getType().name();
+                            text = player.getInventory().getItemInMainHand().getType().name();
                         } else {
                             cs.sendMessage("[BetterAlias] " + ChatColor.RED + "A parameter of this alias requires a player.");
 
@@ -107,7 +105,7 @@ public class AliasManager {
                         }
                     } else if (text.equalsIgnoreCase("handItemID")) {
                         if (player != null) {
-                            text = new Integer(player.getItemInHand().getTypeId()).toString();
+                            text = new Integer(player.getInventory().getItemInMainHand().getTypeId()).toString();
                         } else {
                             cs.sendMessage("[BetterAlias] " + ChatColor.RED + "A parameter of this alias requires a player.");
 
@@ -295,21 +293,6 @@ public class AliasManager {
             if (p != null) {
                 p.chat(command);
             }
-        }
-    }
-
-    public void copy(InputStream in, File file) {
-        try {
-            OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

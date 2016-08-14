@@ -9,7 +9,7 @@ import com.ne0nx3r0.betteralias.BetterAlias;
 
 public class PluginConfig {
 
-	private Configuration configuration;
+	private static Configuration configuration;
 
 	private final File configurationFile;
 
@@ -18,16 +18,17 @@ public class PluginConfig {
 		plugin.saveDefaultConfig();
 		plugin.saveConfig();
 
-		configuration = plugin.getConfig();
+		PluginConfig.configuration = plugin.getConfig();
 		configurationFile = new File(plugin.getDataFolder(), "config.yml");
 	}
 
-	// TODO Synch with bareload
-	public void reload() {
-		configuration = YamlConfiguration.loadConfiguration(configurationFile);
+	public boolean reload() {
+		PluginConfig.configuration = YamlConfiguration.loadConfiguration(configurationFile);
+		
+		return !PluginConfig.configuration.getKeys(false).isEmpty();
 	}
 
 	public boolean getDebuggingState() {
-		return this.configuration.getBoolean("debug");
+		return PluginConfig.configuration.getBoolean("debug");
 	}
 }

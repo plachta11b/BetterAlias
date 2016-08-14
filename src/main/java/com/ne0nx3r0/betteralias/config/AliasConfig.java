@@ -26,7 +26,7 @@ public class AliasConfig {
 
 	private final File configurationFile;
 
-	private FileConfiguration configuration;
+	private static FileConfiguration configuration;
 
 	public AliasConfig(final BetterAlias plugin) {
 
@@ -39,22 +39,21 @@ public class AliasConfig {
             copy(plugin.getResource("aliases.yml"), configurationFile);
         }
 		
-        configuration = YamlConfiguration.loadConfiguration(configurationFile);
+        AliasConfig.configuration = YamlConfiguration.loadConfiguration(configurationFile);
 	}
 
-	// TODO Synch with bareload
 	public void reload() {
-		configuration = YamlConfiguration.loadConfiguration(configurationFile);
+		AliasConfig.configuration = YamlConfiguration.loadConfiguration(configurationFile);
 	}
 
 	public FileConfiguration getAliasConfiguration() {
-		return this.configuration;
+		return AliasConfig.configuration;
 	}
 
     public final HashMap<String, Alias> loadAliases() {
     	HashMap<String, Alias> aliases = new HashMap<String, Alias>();
 
-        Set<String> aliasList = this.configuration.getKeys(false);
+        Set<String> aliasList = AliasConfig.configuration.getKeys(false);
 
         if (aliasList.isEmpty()) {
             plugin.getLogger().log(Level.WARNING, "No aliases found in aliases.yml");
@@ -65,11 +64,11 @@ public class AliasConfig {
         for (String sAlias : aliasList) {
             Alias alias = new Alias(
                     sAlias,
-                    this.configuration.getBoolean(sAlias + ".caseSensitive", false),
-                    this.configuration.getString(sAlias + ".permission", null),
-                    this.configuration.getString(sAlias + ".priority", null));
+                    AliasConfig.configuration.getBoolean(sAlias + ".caseSensitive", false),
+                    AliasConfig.configuration.getString(sAlias + ".permission", null),
+                    AliasConfig.configuration.getString(sAlias + ".priority", null));
 
-            for (String sArg : this.configuration.getConfigurationSection(sAlias).getKeys(false)) {
+            for (String sArg : AliasConfig.configuration.getConfigurationSection(sAlias).getKeys(false)) {
                 List<AliasCommand> commandsList = new ArrayList<AliasCommand>();
 
                 if (!sArg.equalsIgnoreCase("permission")
@@ -86,10 +85,10 @@ public class AliasConfig {
 
                     List<String> sArgLines = new ArrayList<String>();
 
-                    if (this.configuration.isList(sAlias + "." + sArg)) {
-                        sArgLines = this.configuration.getStringList(sAlias + "." + sArg);
+                    if (AliasConfig.configuration.isList(sAlias + "." + sArg)) {
+                        sArgLines = AliasConfig.configuration.getStringList(sAlias + "." + sArg);
                     } else {
-                        sArgLines.add(this.configuration.getString(sAlias + "." + sArg));
+                        sArgLines.add(AliasConfig.configuration.getString(sAlias + "." + sArg));
                     }
 
                     for (String sArgLine : sArgLines) {

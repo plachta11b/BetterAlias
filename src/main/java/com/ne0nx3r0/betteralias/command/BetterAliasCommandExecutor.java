@@ -24,7 +24,7 @@ public class BetterAliasCommandExecutor implements CommandExecutor {
 
             cs.sendMessage(ChatColor.GOLD + "Reloading aliases...");
 
-            if (plugin.aliasManager.loadAliases()) {
+            if (plugin.reload()) {
                 cs.sendMessage(ChatColor.GOLD + "Aliases reloaded!");
             } else {
                 cs.sendMessage(ChatColor.RED + "An error occurred while reloading aliases!");

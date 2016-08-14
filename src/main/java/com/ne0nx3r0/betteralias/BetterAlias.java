@@ -31,4 +31,13 @@ public class BetterAlias extends JavaPlugin
 
         this.getCommand("bareload").setExecutor(betterAliasCommandExecutor);
     }
+    
+    public boolean reload() {
+    	
+    	if (aliasManager.loadAliases() && this.config.reload()) {
+    		return true;
+    	}
+
+    	return false;
+    }
 }

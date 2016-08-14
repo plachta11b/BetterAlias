@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ne0nx3r0.betteralias</groupId>
   <artifactId>BetterAlias</artifactId>
-  <version>1.5.3</version>
+  <version>1.5.4</version>
   <name>BetterAlias</name>
   <description>Command alias system</description>
   <url>https://dev.bukkit.org/bukkit-plugins/betteralias/</url>
