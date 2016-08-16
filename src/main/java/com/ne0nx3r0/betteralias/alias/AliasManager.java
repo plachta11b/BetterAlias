@@ -46,7 +46,11 @@ public class AliasManager {
 		return true;
 	}
 
-    public boolean sendAliasCommands(Alias alias, CommandSender cs, String commandString) {
+	public boolean sendAliasCommands(Alias alias, CommandSender cs, String commandString) {
+		return sendAliasCommands(alias, cs, commandString, "");
+	}
+
+    public boolean sendAliasCommands(Alias alias, CommandSender cs, String commandString, String commandPrefix) {
         Player player = null;
 
         if (cs instanceof Player) {
@@ -187,17 +191,17 @@ public class AliasManager {
                     }, ac.waitTime);
                 } else if (ac.type.equals(AliasCommandTypes.WAIT_THEN_CONSOLE)) {
                     if (player != null) {
-                        plugin.getServer().getScheduler().runTaskLater(plugin, new waitConsoleCommand(sNewCommand.substring(1),
+                        plugin.getServer().getScheduler().runTaskLater(plugin, new waitConsoleCommand(commandPrefix + sNewCommand.substring(1),
                                 "[BetterAlias] " + ChatColor.AQUA + "Running console command for " + player.getName() + ": " + sNewCommand), ac.waitTime);
                     } else {
-                        plugin.getServer().getScheduler().runTaskLater(plugin, new waitConsoleCommand(sNewCommand.substring(1),
+                        plugin.getServer().getScheduler().runTaskLater(plugin, new waitConsoleCommand(commandPrefix + sNewCommand.substring(1),
                                 "[BetterAlias] " + ChatColor.AQUA + "Running: " + sNewCommand), ac.waitTime);
                     }
                 } else if (ac.type.equals(AliasCommandTypes.WAIT)) {
                     if (player != null) {
                         plugin.getServer().getScheduler().runTaskLater(plugin, new waitPlayerCommand(sNewCommand, player.getName()), ac.waitTime);
                     } else {
-                        plugin.getServer().getScheduler().runTaskLater(plugin, new waitConsoleCommand(sNewCommand.substring(1),
+                        plugin.getServer().getScheduler().runTaskLater(plugin, new waitConsoleCommand(commandPrefix + sNewCommand.substring(1),
                                 "[BetterAlias] " + ChatColor.AQUA + "Running: " + sNewCommand), ac.waitTime);
                     }
                 } else if (ac.type.equals(AliasCommandTypes.PLAYER_AS_OP) && player != null) {
@@ -210,14 +214,14 @@ public class AliasManager {
                     if (player.isOp() == false) {
                         try {
                             player.setOp(true);
-                            AliasManager.plugin.getServer().dispatchCommand(player, sNewCommand.substring(1));
+                            AliasManager.plugin.getServer().dispatchCommand(player, commandPrefix + sNewCommand.substring(1));
                         } catch (Exception e) {
                             e.printStackTrace();
                         } finally {
                             player.setOp(false);
                         }
                     } else {
-                        AliasManager.plugin.getServer().dispatchCommand(player, sNewCommand.substring(1));
+                        AliasManager.plugin.getServer().dispatchCommand(player, commandPrefix + sNewCommand.substring(1));
                     }
                 } else if (ac.type.equals(AliasCommandTypes.CONSOLE)
                         || player == null) {
@@ -229,7 +233,7 @@ public class AliasManager {
                         cs.sendMessage("[BetterAlias] " + ChatColor.AQUA + "Running: " + sNewCommand);
                     }
 
-                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), sNewCommand.substring(1));
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), commandPrefix + sNewCommand.substring(1));
                 } else {
                     player.chat(sNewCommand);
                 }
@@ -247,7 +251,7 @@ public class AliasManager {
         ArrayList<Alias> aliasMatches = new ArrayList<Alias>();
 
         for (Alias alias : this.aliases.values()) {
-        	if (priority != alias.getPriority()) {
+        	if (priority != null && priority != alias.getPriority()) {
         		continue;
         	}
 

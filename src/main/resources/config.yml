@@ -1,4 +1,7 @@
 # Welcome in BetterAlias config
 
+# Enable CommandBlocks
+enableCommandBlocks: false
+
 # Format for command to reload aliases
 debug: false

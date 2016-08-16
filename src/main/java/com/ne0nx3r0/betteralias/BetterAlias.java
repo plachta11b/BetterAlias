@@ -19,8 +19,9 @@ public class BetterAlias extends JavaPlugin
     {
         this.config = new PluginConfig(this);
 
-        if (this.config.getDebuggingState() == true) {
-        	this.getLogger().log(Level.INFO, "Debugging enabled by config");
+        if (this.config.isDebuggingAllowed() == true) {
+        	String version = this.getDescription().getVersion();
+        	this.getLogger().log(Level.INFO, "Debugging enabled by config on version: " + version);
         }
 
         this.aliasManager = new AliasManager(this);

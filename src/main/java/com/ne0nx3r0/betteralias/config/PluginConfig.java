@@ -16,7 +16,6 @@ public class PluginConfig {
 	public PluginConfig(final BetterAlias plugin) {
 
 		plugin.saveDefaultConfig();
-		plugin.saveConfig();
 
 		PluginConfig.configuration = plugin.getConfig();
 		configurationFile = new File(plugin.getDataFolder(), "config.yml");
@@ -28,7 +27,11 @@ public class PluginConfig {
 		return !PluginConfig.configuration.getKeys(false).isEmpty();
 	}
 
-	public boolean getDebuggingState() {
+	public boolean isDebuggingAllowed() {
 		return PluginConfig.configuration.getBoolean("debug");
+	}
+
+	public boolean isCommandBlockAllowed() {
+		return PluginConfig.configuration.getBoolean("enableCommandBlocks");
 	}
 }

@@ -16,7 +16,7 @@ public class Alias
     public Alias(String commandName, boolean caseSensitive, String permissionNode, String priority)
     {
         this.caseSensitive = caseSensitive;
-        
+
         if(this.caseSensitive)
         {
             this.command = commandName;
@@ -60,7 +60,8 @@ public class Alias
     public EventPriority getPriority() {
     	return this.priority;
     }
-    
+
+    // get commands where length is number of arguments
     public boolean hasCommandFor(int length)
     {
         return this.parameters.containsKey(length) || this.parameters.containsKey(-1);
@@ -79,7 +80,7 @@ public class Alias
     Iterable<AliasCommand> getCommands(int length)
     {
         List<AliasCommand> commands = this.parameters.get(length);
-        
+
         if(commands != null)
         {
             return commands;
@@ -88,6 +89,7 @@ public class Alias
         return this.parameters.get(-1);
     }
 
+    // organize aliases by number of arguments
     public void setCommandsFor(int length,List<AliasCommand> commandsList)
     {
         this.parameters.put(length, commandsList);
