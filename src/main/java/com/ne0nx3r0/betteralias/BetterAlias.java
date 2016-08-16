@@ -9,19 +9,17 @@ import com.ne0nx3r0.betteralias.command.BetterAliasCommandExecutor;
 import com.ne0nx3r0.betteralias.config.PluginConfig;
 import com.ne0nx3r0.betteralias.listener.BetterAliasCommandListener;
 
-public class BetterAlias extends JavaPlugin
-{
+public class BetterAlias extends JavaPlugin {
     public AliasManager aliasManager;
     public PluginConfig config;
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         this.config = new PluginConfig(this);
 
         if (this.config.isDebuggingAllowed() == true) {
-        	String version = this.getDescription().getVersion();
-        	this.getLogger().log(Level.INFO, "Debugging enabled by config on version: " + version);
+            String version = this.getDescription().getVersion();
+            this.getLogger().log(Level.INFO, "Debugging enabled by config on version: " + version);
         }
 
         this.aliasManager = new AliasManager(this);
@@ -34,11 +32,11 @@ public class BetterAlias extends JavaPlugin
     }
     
     public boolean reload() {
-    	
-    	if (aliasManager.loadAliases() && this.config.reload()) {
-    		return true;
-    	}
+        
+        if (aliasManager.loadAliases() && this.config.reload()) {
+            return true;
+        }
 
-    	return false;
+        return false;
     }
 }

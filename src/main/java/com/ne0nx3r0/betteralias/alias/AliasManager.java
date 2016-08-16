@@ -33,22 +33,22 @@ public class AliasManager {
         this.aliases = this.config.loadAliases();
     }
 
-	public boolean loadAliases() {
+    public boolean loadAliases() {
 
-		this.config.reload();
+        this.config.reload();
 
         this.aliases = this.config.loadAliases();
 
         if (aliases.isEmpty()) {
-        	return false;
+            return false;
         }
 
-		return true;
-	}
+        return true;
+    }
 
-	public boolean sendAliasCommands(Alias alias, CommandSender cs, String commandString) {
-		return sendAliasCommands(alias, cs, commandString, "");
-	}
+    public boolean sendAliasCommands(Alias alias, CommandSender cs, String commandString) {
+        return sendAliasCommands(alias, cs, commandString, "");
+    }
 
     public boolean sendAliasCommands(Alias alias, CommandSender cs, String commandString, String commandPrefix) {
         Player player = null;
@@ -129,7 +129,7 @@ public class AliasManager {
                         }
                     } else if (text.equalsIgnoreCase("*")) {
                         //ltrim emulation
-                        while(commandString.length() > 0 && commandString.substring(0,1).equals(" ")){
+                        while (commandString.length() > 0 && commandString.substring(0,1).equals(" ")) {
                             commandString = commandString.substring(1);
                         }
 
@@ -246,20 +246,20 @@ public class AliasManager {
     }
 
     public Collection<Alias> getAliasMatches(String sCommand, EventPriority priority) {
-        String sCommandLower = sCommand.toLowerCase()+" ";
+        String sCommandLower = sCommand.toLowerCase() + " ";
 
         ArrayList<Alias> aliasMatches = new ArrayList<Alias>();
 
         for (Alias alias : this.aliases.values()) {
-        	if (priority != null && priority != alias.getPriority()) {
-        		continue;
-        	}
+            if (priority != null && priority != alias.getPriority()) {
+                continue;
+            }
 
             if (alias.caseSensitive) {
-                if (sCommand.startsWith(alias.command+" ")) {
+                if (sCommand.startsWith(alias.command + " ")) {
                     aliasMatches.add(alias);
                 }
-            } else if (sCommandLower.startsWith(alias.command+" ")) {
+            } else if (sCommandLower.startsWith(alias.command + " ")) {
                 aliasMatches.add(alias);
             }
         }

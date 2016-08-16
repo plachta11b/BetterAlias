@@ -35,5 +35,4 @@ public class BetterAliasCommandExecutor implements CommandExecutor {
 
         return true;
     }
-
 }

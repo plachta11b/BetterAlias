@@ -22,36 +22,36 @@ import com.ne0nx3r0.betteralias.alias.AliasCommandTypes;
 
 public class AliasConfig {
 
-	private final Plugin plugin;
+    private final Plugin plugin;
 
-	private final File configurationFile;
+    private final File configurationFile;
 
-	private static FileConfiguration configuration;
+    private static FileConfiguration configuration;
 
-	public AliasConfig(final BetterAlias plugin) {
+    public AliasConfig(final BetterAlias plugin) {
 
-		this.plugin = plugin;
-		
-		this.configurationFile = new File(plugin.getDataFolder(), "aliases.yml");
-		
+        this.plugin = plugin;
+        
+        this.configurationFile = new File(plugin.getDataFolder(), "aliases.yml");
+        
         if (!configurationFile.exists()) {
-        	configurationFile.getParentFile().mkdirs();
+            configurationFile.getParentFile().mkdirs();
             copy(plugin.getResource("aliases.yml"), configurationFile);
         }
-		
+        
         AliasConfig.configuration = YamlConfiguration.loadConfiguration(configurationFile);
-	}
+    }
 
-	public void reload() {
-		AliasConfig.configuration = YamlConfiguration.loadConfiguration(configurationFile);
-	}
+    public void reload() {
+        AliasConfig.configuration = YamlConfiguration.loadConfiguration(configurationFile);
+    }
 
-	public FileConfiguration getAliasConfiguration() {
-		return AliasConfig.configuration;
-	}
+    public FileConfiguration getAliasConfiguration() {
+        return AliasConfig.configuration;
+    }
 
     public final HashMap<String, Alias> loadAliases() {
-    	HashMap<String, Alias> aliases = new HashMap<String, Alias>();
+        HashMap<String, Alias> aliases = new HashMap<String, Alias>();
 
         Set<String> aliasList = AliasConfig.configuration.getKeys(false);
 
@@ -72,14 +72,14 @@ public class AliasConfig {
                 List<AliasCommand> commandsList = new ArrayList<AliasCommand>();
 
                 if (!sArg.equalsIgnoreCase("permission")
-                		&& !sArg.equalsIgnoreCase("caseSensitive")
-                		&& !sArg.equalsIgnoreCase("priority")) {
+                        && !sArg.equalsIgnoreCase("caseSensitive")
+                        && !sArg.equalsIgnoreCase("priority")) {
                     int iArg;
 
                     if (sArg.equals("*")) {
                         iArg = -1;
                     } else {
-                    	// TODO This raise error sometime on unknown configuration parameter
+                        // TODO This raise error sometime on unknown configuration parameter
                         iArg = Integer.parseInt(sArg);
                     }
 

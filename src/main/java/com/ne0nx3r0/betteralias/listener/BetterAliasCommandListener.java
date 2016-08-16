@@ -28,27 +28,27 @@ public class BetterAliasCommandListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocessLowest(PlayerCommandPreprocessEvent e) {
-    	onPlayerCommandPreprocess(e, EventPriority.LOWEST);
+        onPlayerCommandPreprocess(e, EventPriority.LOWEST);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerCommandPreprocessLow(PlayerCommandPreprocessEvent e) {
-    	onPlayerCommandPreprocess(e, EventPriority.LOW);
+        onPlayerCommandPreprocess(e, EventPriority.LOW);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerCommandPreprocessNormal(PlayerCommandPreprocessEvent e) {
-    	onPlayerCommandPreprocess(e, EventPriority.NORMAL);
+        onPlayerCommandPreprocess(e, EventPriority.NORMAL);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerCommandPreprocessHigh(PlayerCommandPreprocessEvent e) {
-    	onPlayerCommandPreprocess(e, EventPriority.HIGH);
+        onPlayerCommandPreprocess(e, EventPriority.HIGH);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocessHighest(PlayerCommandPreprocessEvent e) {
-    	onPlayerCommandPreprocess(e, EventPriority.HIGHEST);
+        onPlayerCommandPreprocess(e, EventPriority.HIGHEST);
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e, EventPriority priority) {
@@ -56,7 +56,7 @@ public class BetterAliasCommandListener implements Listener {
         String sCommand = e.getMessage().substring(1);
 
         if (this.plugin.config.isDebuggingAllowed() == true) {
-        	this.plugin.getLogger().log(Level.INFO, "Player: " + e.getPlayer() + " issue command " + sCommand);
+            this.plugin.getLogger().log(Level.INFO, "Player: " + e.getPlayer() + " issue command " + sCommand);
         }
 
         for (Alias alias : plugin.aliasManager.getAliasMatches(sCommand, priority)) {
@@ -80,27 +80,27 @@ public class BetterAliasCommandListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onConsoleCommandLowest(ServerCommandEvent e) {
-    	onConsoleCommand(e, EventPriority.LOWEST);
+        onConsoleCommand(e, EventPriority.LOWEST);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onConsoleCommandLow(ServerCommandEvent e) {
-    	onConsoleCommand(e, EventPriority.LOW);
+        onConsoleCommand(e, EventPriority.LOW);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onConsoleCommandNormal(ServerCommandEvent e) {
-    	onConsoleCommand(e, EventPriority.NORMAL);
+        onConsoleCommand(e, EventPriority.NORMAL);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onConsoleCommandHigh(ServerCommandEvent e) {
-    	onConsoleCommand(e, EventPriority.HIGH);
+        onConsoleCommand(e, EventPriority.HIGH);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onConsoleCommandHighest(ServerCommandEvent e) {
-    	onConsoleCommand(e, EventPriority.HIGHEST);
+        onConsoleCommand(e, EventPriority.HIGHEST);
     }
 
     public void onConsoleCommand(ServerCommandEvent e, EventPriority priority) {
@@ -108,14 +108,14 @@ public class BetterAliasCommandListener implements Listener {
         String sCommand = e.getCommand();
 
         if (this.plugin.config.isDebuggingAllowed() == true) {
-        	this.plugin.getLogger().log(Level.INFO, "Server console: " + e.getSender() + " issue command " + sCommand);
+            this.plugin.getLogger().log(Level.INFO, "Server console: " + e.getSender() + " issue command " + sCommand);
         }
 
         for (Alias alias : plugin.aliasManager.getAliasMatches(sCommand, priority)) {
             String sArgs = sCommand.substring(alias.command.length());
 
             if (plugin.aliasManager.sendAliasCommands(alias, e.getSender(), sArgs)) {
-            	// 
+                // 
                 e.setCommand("bareload donothing");
             }
         }
@@ -125,42 +125,42 @@ public class BetterAliasCommandListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void redstoneChanges(BlockRedstoneEvent e) {
 
-    	if (this.plugin.config.isCommandBlockAllowed() == false) return;
+        if (this.plugin.config.isCommandBlockAllowed() == false) return;
 
-    	Block block = e.getBlock();
+        Block block = e.getBlock();
 
-    	if (e.getOldCurrent() == 0 && e.getNewCurrent() > 0) {
-    	    if (block != null) {
-    	        BlockState state = block.getState();
-    	        if(state != null) {
-    	            if (state instanceof CommandBlock) {
-    	                CommandBlock cb = (CommandBlock)state;
+        if (e.getOldCurrent() == 0 && e.getNewCurrent() > 0) {
+            if (block != null) {
+                BlockState state = block.getState();
+                if (state != null) {
+                    if (state instanceof CommandBlock) {
+                        CommandBlock cb = (CommandBlock)state;
 
-    	                String sCommand = cb.getCommand();
-    	                String sName = cb.getName();
+                        String sCommand = cb.getCommand();
+                        String sName = cb.getName();
 
-    	                if (this.plugin.config.isDebuggingAllowed() == true) {
-    	                    this.plugin.getLogger().log(Level.INFO, "CommandBlock: " + sName + " issue command " + sCommand);
-    	                }
+                        if (this.plugin.config.isDebuggingAllowed() == true) {
+                            this.plugin.getLogger().log(Level.INFO, "CommandBlock: " + sName + " issue command " + sCommand);
+                        }
 
-    	                for (Alias alias : plugin.aliasManager.getAliasMatches(sCommand, null)) {
-    	                    String sArgs = sCommand.substring(alias.command.length());
+                        for (Alias alias : plugin.aliasManager.getAliasMatches(sCommand, null)) {
+                            String sArgs = sCommand.substring(alias.command.length());
 
-    	                    // get location from block where commandblock is activated
-    	                    int posX = block.getX();
-    	                    int posY = block.getY();
-    	                    int posZ = block.getZ();
+                            // get location from block where commandblock is activated
+                            int posX = block.getX();
+                            int posY = block.getY();
+                            int posZ = block.getZ();
 
-    	                    // set execution location /execute @e[type=Player] x y z
-    	                    String prefix = "execute @e[type=Player] " + posX + " " + posY + " " + posZ + " ";
+                            // set execution location /execute @e[type=Player] x y z
+                            String prefix = "execute @e[type=Player] " + posX + " " + posY + " " + posZ + " ";
 
-    	                    ConsoleCommandSender sender = this.plugin.getServer().getConsoleSender();
+                            ConsoleCommandSender sender = this.plugin.getServer().getConsoleSender();
 
-    	                    plugin.aliasManager.sendAliasCommands(alias, sender, sArgs, prefix);
-    	                }
-    	            }
-    	        }
-    	    }
-    	}
+                            plugin.aliasManager.sendAliasCommands(alias, sender, sArgs, prefix);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
